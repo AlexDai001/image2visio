@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image2Visio"
+  short_description: "用语义清单把复杂参考图重建为原生可编辑 Visio，并完成资产、公式和质量审计。"
+  default_prompt: "使用 $image2visio 对参考图生成测量证据和语义 manifest，以原生 Visio 对象、公式矢量组和最小必要栅格资产重建并审计 .vsdx。"

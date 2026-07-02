@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex/image2visio/manifest.schema.json",
+  "title": "FigEdit-compatible Visio reconstruction manifest",
+  "type": "object",
+  "required": ["project", "source_image", "canvas", "classification", "assets", "elements"],
+  "properties": {
+    "project": {"type": "string", "minLength": 1},
+    "source_image": {"type": "string", "minLength": 1},
+    "canvas": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {"type": "number", "exclusiveMinimum": 0},
+        "height": {"type": "number", "exclusiveMinimum": 0},
+        "background": {"type": "string"}
+      }
+    },
+    "classification": {
+      "type": "object",
+      "required": ["layout_topology", "complexity", "style_type", "reconstruction_mode"],
+      "properties": {
+        "layout_topology": {"type": "string"},
+        "complexity": {"type": "string"},
+        "style_type": {"type": "string"},
+        "reconstruction_mode": {"type": "string"},
+        "reconstruction_intent": {"type": "string"}
+      }
+    },
+    "visio": {
+      "type": "object",
+      "properties": {
+        "page_width_in": {"type": "number", "exclusiveMinimum": 0},
+        "page_height_in": {"type": "number", "exclusiveMinimum": 0},
+        "page_index": {"type": "integer", "minimum": 1},
+        "page_mode": {"enum": ["replace", "append", "new-page"]},
+        "default_font": {"type": "string"},
+        "shape_sheet": {"type": "object"}
+      }
+    },
+    "panels": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/boxWithId"}
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {"$ref": "#/$defs/boxWithId"},
+          {
+            "type": "object",
+            "required": ["file"],
+            "properties": {
+              "file": {"type": "string"},
+              "source_region": {"$ref": "#/$defs/box"},
+              "pad": {"type": "number", "minimum": 0},
+              "kind": {"type": "string"},
+              "decision": {"type": "string"},
+              "decision_reason": {"type": "string"},
+              "text_policy": {"enum": ["extract-editable", "preserve-raster", "allow-embedded-text", "review"]},
+              "edge_policy": {"enum": ["check", "allow-border-touch"]},
+              "background_handling": {"type": "string"},
+              "crop_status": {"type": "string"}
+            }
+          }
+        ]
+      }
+    },
+    "elements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "type": {"enum": ["rect", "text", "line", "path", "polyline", "polygon", "circle", "ellipse", "image", "math", "formula", "connector"]},
+          "decision": {"type": "string"},
+          "layer": {"enum": ["background", "assets", "panels", "sections", "icons", "connectors", "texts", "annotations"]},
+          "panel_id": {"type": "string"},
+          "group_id": {"type": "string"},
+          "coordinate_space": {"enum": ["canvas", "panel"]},
+          "z_index": {"type": "number"},
+          "allow_overlap": {"type": "boolean"},
+          "x": {"type": "number"}, "y": {"type": "number"},
+          "w": {"type": "number"}, "h": {"type": "number"},
+          "x1": {"type": "number"}, "y1": {"type": "number"},
+          "x2": {"type": "number"}, "y2": {"type": "number"},
+          "r": {"type": "number"}, "rx": {"type": "number"}, "ry": {"type": "number"},
+          "text": {"type": "string"}, "lines": {"type": "array", "items": {"type": "string"}},
+          "latex": {"type": "string"}, "d": {"type": "string"}, "points": {"type": "string"},
+          "from_id": {"type": "string"}, "to_id": {"type": "string"},
+          "asset_id": {"type": "string"}, "href": {"type": "string"},
+          "fill": {"type": "string"}, "stroke": {"type": "string"},
+          "stroke_width": {"type": "number"}, "dasharray": {"type": "string"}, "opacity": {"type": "number"},
+          "font_size": {"type": "number"}, "font_weight": {"type": ["string", "number"]},
+          "font_family": {"type": "string"}, "text_anchor": {"enum": ["start", "middle", "end"]},
+          "arrow_start": {"type": "boolean"}, "arrow_end": {"type": "boolean"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "review_status": {"type": "string"}, "source_bbox": {"$ref": "#/$defs/box"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "style_tokens": {"type": "object"},
+    "diagnostics": {"type": "object"},
+    "quality_gates": {"type": "object"}
+  },
+  "$defs": {
+    "box": {
+      "type": "object",
+      "required": ["x", "y", "w", "h"],
+      "properties": {
+        "x": {"type": "number"}, "y": {"type": "number"},
+        "w": {"type": "number", "exclusiveMinimum": 0},
+        "h": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "boxWithId": {
+      "allOf": [
+        {"$ref": "#/$defs/box"},
+        {"type": "object", "required": ["id"], "properties": {"id": {"type": "string", "minLength": 1}}}
+      ]
+    }
+  },
+  "additionalProperties": true
+}

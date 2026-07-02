@@ -1,0 +1,26 @@
+{
+  "project": "visio-manifest-example",
+  "source_image": "source.png",
+  "canvas": {"width": 1200, "height": 675, "background": "#ffffff"},
+  "classification": {
+    "layout_topology": "linear-flow",
+    "complexity": "medium",
+    "style_type": "academic-color",
+    "reconstruction_mode": "model-led-hybrid"
+  },
+  "visio": {"page_width_in": 16, "page_mode": "replace", "default_font": "Microsoft YaHei"},
+  "panels": [
+    {"id": "panel-main", "x": 60, "y": 70, "w": 1080, "h": 520, "label": "Main flow"}
+  ],
+  "assets": [],
+  "elements": [
+    {"id": "panel-shell", "type": "rect", "x": 60, "y": 70, "w": 1080, "h": 520, "fill": "#f7f9fc", "stroke": "#5b6b7f", "stroke_width": 2, "layer": "background", "panel_id": "panel-main"},
+    {"id": "node-input", "type": "rect", "coordinate_space": "panel", "panel_id": "panel-main", "x": 0.08, "y": 0.32, "w": 0.22, "h": 0.24, "fill": "#eaf2ff", "stroke": "#2563eb", "stroke_width": 2, "rx": 10, "layer": "sections"},
+    {"id": "node-output", "type": "rect", "coordinate_space": "panel", "panel_id": "panel-main", "x": 0.70, "y": 0.32, "w": 0.22, "h": 0.24, "fill": "#eefbf1", "stroke": "#238636", "stroke_width": 2, "rx": 10, "layer": "sections"},
+    {"id": "label-input", "type": "text", "coordinate_space": "panel", "panel_id": "panel-main", "x": 0.08, "y": 0.32, "w": 0.22, "h": 0.24, "text": "输入 / Input", "font_size": 24, "font_weight": "700", "fill": "#111111", "layer": "texts"},
+    {"id": "label-output", "type": "text", "coordinate_space": "panel", "panel_id": "panel-main", "x": 0.70, "y": 0.32, "w": 0.22, "h": 0.24, "text": "输出 / Output", "font_size": 24, "font_weight": "700", "fill": "#111111", "layer": "texts"},
+    {"id": "flow-main", "type": "connector", "from_id": "node-input", "to_id": "node-output", "stroke": "#263238", "stroke_width": 2, "arrow_end": true, "layer": "connectors"},
+    {"id": "formula-loss", "type": "math", "x": 470, "y": 430, "w": 260, "h": 70, "latex": "L=\\sum_i (y_i-\\hat{y}_i)^2", "font_size": 28, "fill": "#111111", "layer": "texts"}
+  ]
+}
+
