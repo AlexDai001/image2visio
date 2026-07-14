@@ -1,6 +1,6 @@
 # Image2Visio
 
-当前版本：`v1.0.0`
+当前版本：`v1.1.0`
 
 **Image2Visio** 是一个 Codex Skill，用于把参考图片、截图或已有 `.vsdx` 还原为 **Microsoft Visio 原生可编辑图形**，并从同一份 Visio 源文件导出 PNG、SVG、PDF、PPTX 等交付格式。
 
@@ -236,6 +236,13 @@ powershell -ExecutionPolicy Bypass -File scripts\visio_page_tools.ps1 `
 Image2Visio 不是简单拼接文档，而是把 figedit 的「证据 → manifest → 分元素路由 → 审计」流程，落到 Visio 作为最终可编辑母版的交付形态上。
 
 ## 版本历史
+
+### v1.1.0 — 内联文字策略（Inline Text）
+
+- 普通带框模块默认把标签写进同一 `rect`（`text`/`lines`），不再拆成「框 + 覆盖文本」两个形状。
+- 独立 `text` 仅用于无框标题、连接线标签、跨模块注释、公式等需要单独定位的场景。
+- `visio_manifest_renderer.ps1` 支持对带文字的 `rect` 直接写入 Visio shape text，并新增 `font_color`。
+- 更新 `manifest-pipeline.md`、`manifest.schema.json` 与示例 manifest。
 
 ### v1.0.0 — 初始发布（Image2Visio）
 

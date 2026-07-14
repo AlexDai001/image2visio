@@ -11,6 +11,8 @@ Recreate the reference as editable Visio content. Do not satisfy a rebuild reque
 
 Treat `.vsdx` as the source of truth. Export PNG, SVG, PDF, or PPTX only after the Visio page has been rebuilt or restyled and checked for native editability.
 
+For ordinary text-bearing modules, cards, nodes, and labels with visible frames, use one native Visio shape whose own `Text` contains the label. Do not create a separate overlay text shape by default. Keep text separate only for frameless titles, cross-module annotations, connector labels, formulas, or layouts that require independent positioning or formatting.
+
 For complex or mixed figures, use the semantic manifest pipeline. Redraw structure, retype readable labels, reconstruct formulas as vector groups, and crop only source-specific visual evidence. Never dump OCR or OpenCV detections directly into the final drawing.
 
 ## Complex Figure Workflow
@@ -28,10 +30,10 @@ python scripts\prepare_measurements.py input.png `
 2. Inspect the source and diagnostics, then author a semantic `manifest.json`. Treat OCR, OpenCV, and sampled colors as evidence only.
 3. Route every significant element:
    - redraw panels, cards, grids, arrows, connectors, axes, and generic primitives;
-   - retype readable prose as `text`;
+   - place readable labels directly in their containing `rect`/node through `text` or `lines`; use standalone `text` only when no containing shape exists or independent positioning is required;
    - write formulas as `math` with normalized LaTeX;
    - crop logos, maps, screenshots, photos, chart bodies, thumbnails, and source-specific pictorial objects;
-   - split composite cards into editable shell, editable label, connector, and minimal raster asset.
+   - split composite cards into an editable text-bearing shell, connector, and minimal raster asset; keep the shell and its ordinary label as one shape.
 4. Compose the Visio package:
 
 ```powershell
@@ -70,6 +72,7 @@ Read `references/manifest-pipeline.md` whenever using this workflow. Validate un
    - Use COM automation on Windows when Visio is installed.
    - Use `DrawRectangle`, `DrawOval`, `DrawLine`, `Page.Import` only for small source assets, and shape cells such as `FillForegnd`, `LineColor`, `LineWeight`, `Char.Size`, `Char.Color`, `Rounding`.
    - Use explicit coordinates and IDs for fragile edits.
+   - Store ordinary module labels in the module shape itself so moving or resizing the module keeps its text attached.
    - Keep grouped structure meaningful: major panels, submodules, repeated blocks, legends.
    - For nested modules, use helpers such as `RectRel`, `TextRel`, `LineRel`, and `OvalRel` so child shapes are constrained by their calibrated parent panel.
 
@@ -159,12 +162,13 @@ A Visio rebuild is acceptable only when:
 - Main panel positions, flow direction, captions, and module hierarchy match the reference at first glance.
 - Major panels are aligned to calibrated bounds, with no obvious submodule drift, collision, or cross-panel overlap.
 - Text remains editable and uses a consistent academic font, usually Times New Roman.
+- Ordinary framed modules keep their label in the same native shape; separate overlay text is reserved for justified exceptions.
 - Repeated motifs are represented with reusable native shapes rather than pasted raster crops.
 - Source-specific icons, screenshots, maps, photos, and dense chart bodies may remain minimal cropped assets, but their surrounding frames, labels, and connectors must remain editable.
 - The final `.vsdx` package has no full-page raster reference image in `visio/media`.
 - Requested PNG/SVG/PDF/PPTX deliverables were exported from the saved `.vsdx` and are non-empty.
 - A preview export or package inspection was performed, or the final response explicitly states why verification was skipped.
 
-## Useful Resources
+## Useful Resource
 
-Use `scripts/prepare_measurements.py` for OCR/CV/style evidence. Use `scripts/compose_visio_package.ps1` for semantic-manifest reconstruction. Use `scripts/visio_page_tools.ps1` for export-only inspection and `scripts/visio_rebuild_scaffold.ps1` for legacy low-level drawing scripts. Read `references/manifest-pipeline.md` for the schema and element routing contract, and `references/rebuild-guidelines.md` for visual matching guidance. Validate unfamiliar manifests with `scripts/validate_manifest.py`. See `templates/manifest.schema.json` and `examples/manifest.example.json` for schema examples.
+Use `scripts/prepare_measurements.py` for OCR/CV/style evidence. Use `scripts/compose_visio_package.ps1` for semantic-manifest reconstruction. Use `scripts/visio_page_tools.ps1` for export-only inspection and `scripts/visio_rebuild_scaffold.ps1` for legacy low-level drawing scripts. Read `references/manifest-pipeline.md` for the schema and element routing contract, and `references/rebuild-guidelines.md` for visual matching guidance.

@@ -158,7 +158,8 @@ function Style-Text($shape, $element) {
     $size = if ($element.font_size) { [double]$element.font_size } else { 16.0 }
     $fontPt = $size * $script:PageWidth * 72.0 / $script:CanvasWidth
     Set-Cell $shape 'Char.Size' ((F $fontPt) + ' pt')
-    Set-Cell $shape 'Char.Color' (Hex-To-Rgb ([string]$element.fill))
+    $fontColor = if ($element.font_color) { [string]$element.font_color } elseif ($element.type -eq 'text') { [string]$element.fill } else { '#111111' }
+    Set-Cell $shape 'Char.Color' (Hex-To-Rgb $fontColor)
     $style = 0
     if ([string]$element.font_weight -match 'bold|[6-9]00') { $style += 1 }
     if ($element.italic) { $style += 2 }
@@ -228,7 +229,13 @@ function Draw-Element($element) {
     $kind = "visio-$type"
     $shape = $null
     switch ($type) {
-        'rect' { $shape=Draw-RectFromBox (Resolve-Box $element); Style-Shape $shape $element }
+        'rect' {
+            $shape=Draw-RectFromBox (Resolve-Box $element); Style-Shape $shape $element
+            if ($element.text -or $element.lines) {
+                $shape.Text = if ($element.lines) { @($element.lines) -join "`n" } else { [string]$element.text }
+                Style-Text $shape $element
+            }
+        }
         'text' {
             $shape=Draw-RectFromBox (Get-TextBox $element); Style-Shape $shape $element -TextOnly
             $shape.Text = if ($element.lines) { @($element.lines) -join "`n" } else { [string]$element.text }; Style-Text $shape $element

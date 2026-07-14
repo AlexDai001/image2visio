@@ -93,7 +93,7 @@
           "fill": {"type": "string"}, "stroke": {"type": "string"},
           "stroke_width": {"type": "number"}, "dasharray": {"type": "string"}, "opacity": {"type": "number"},
           "font_size": {"type": "number"}, "font_weight": {"type": ["string", "number"]},
-          "font_family": {"type": "string"}, "text_anchor": {"enum": ["start", "middle", "end"]},
+          "font_family": {"type": "string"}, "font_color": {"type": "string"}, "text_anchor": {"enum": ["start", "middle", "end"]},
           "arrow_start": {"type": "boolean"}, "arrow_end": {"type": "boolean"},
           "confidence": {"type": "number", "minimum": 0, "maximum": 1},
           "review_status": {"type": "string"}, "source_bbox": {"$ref": "#/$defs/box"}

@@ -18,8 +18,8 @@ Detector output is never an automatic drawing plan.
 
 | Source element | Manifest type | Visio result |
 |---|---|---|
-| panel, card, frame | `rect` | native rectangle |
-| ordinary label | `text` | native editable text box |
+| panel, card, framed module | `rect` with `text` or `lines` | one native text-bearing rectangle |
+| frameless title, annotation, connector label | `text` | native editable text box |
 | straight line | `line` | native line |
 | relationship | `connector` | dynamic glued connector |
 | node or marker | `circle`, `ellipse`, `polygon` | native geometry |
@@ -28,6 +28,33 @@ Detector output is never an automatic drawing plan.
 | logo, map, screenshot, photo, chart body | `image` + asset | cropped raster asset |
 
 When uncertain whether a visual object is generic or source-specific, crop it. Do not crop a whole card merely to preserve one icon: redraw the shell, retype the label, and crop the icon alone.
+
+## Inline Text Policy
+
+- Default to one shape for every ordinary framed module: put `text` or `lines`, `font_size`, `font_weight`, `font_family`, `font_color`, and `text_anchor` on the `rect` element.
+- Do not pair `rect` with a same-bounds overlay `text` element unless the label needs independent movement, rotation, mixed formatting, or a different semantic lifecycle.
+- Use standalone `text` for document titles, panel headings without frames, relationship labels, captions, formulas, and cross-module annotations.
+- Glue connectors to the text-bearing rectangle ID.
+
+Example:
+
+```json
+{
+  "id": "node-dispatch",
+  "type": "rect",
+  "x": 120,
+  "y": 90,
+  "w": 220,
+  "h": 70,
+  "fill": "#e8f0f7",
+  "stroke": "#315b86",
+  "text": "滚动优化调度",
+  "font_color": "#163c78",
+  "font_size": 18,
+  "font_weight": "600",
+  "text_anchor": "middle"
+}
+```
 
 ## Coordinate Systems
 
@@ -89,4 +116,3 @@ Review before delivery when:
 - an asset exceeds 40% of canvas area;
 - crops need padding;
 - formulas fall back to text or do not import as Visio groups.
-
